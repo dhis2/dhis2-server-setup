@@ -77,3 +77,8 @@ prop2po --duplicates=msgctxt -t i18n_app.properties i18n_app_ar.properties ar.po
 </pre>
 
 After this, the SCM can be updated. 
+
+Merge all existing PO files with a new template in a given directory. 
+~~~
+for f in *.po; do msgmerge -vU $f dhis-web-dashboard-integration.pot ; done
+~~~
