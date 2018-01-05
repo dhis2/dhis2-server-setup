@@ -8,4 +8,5 @@ if [ ! -d /ebs1/jenkins/workspace/dhis2-$1 ]; then
   exit 1
 fi
 
+# Copy WAR file to S3
 aws s3 cp $WAR_LOCATION $S3_LOCATION
