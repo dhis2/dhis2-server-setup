@@ -5,7 +5,6 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
-
 function validate() {
   if [ ! -d /ebs1/instances/$1 ]; then
     echo "Instance $1 does not exist."
