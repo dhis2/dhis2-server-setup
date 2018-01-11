@@ -28,4 +28,5 @@ for instance in $@; do
   cleanWebApps $instance
   downloadWar $instance
   $DIR/start-instance.sh $instance
+  sleep 2
 done
