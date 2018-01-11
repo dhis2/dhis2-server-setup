@@ -9,19 +9,28 @@ if [ $# -le 1 ]; then
   exit 1
 fi
 
-function validate() {  
+function validate() {
   if [ -d $INSTANCE_DIR/$1 ]; then
     echo "Instance $1 already exists."
     exit 1
   fi
-  
+
   if [ $2 -lt 8000 ]; then
     echo "Port number must be greater than 8000: $2."
+    exit 2
+  fi
+
+  if [ $2 -gt 9000 ]; then
+    echo "Port number must be less than 9000: $2."
     exit 2
   fi
 }
 
 function create() {
+  PORT=$2
+  SHUTDOWN_PORT=$(($2+1000))
+  echo "Using HTTP port: ${PORT} and shutdown port: ${SHUTDOWN_PORT}"
+
   echo "Downloading instance from ${INSTANCE_URL}"
   wget --progress=bar $INSTANCE_URL -O /tmp/${INSTANCE_FILE}.tar.gz
 
@@ -32,10 +41,11 @@ function create() {
   mv $INSTANCE_DIR/$INSTANCE_FILE $INSTANCE_DIR/$1
 
   echo "Configuring Tomcat"
-  echo "DHIS2_HOME='${INSTANCE_DIR}/$1/home'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
-  echo "JAVA_HOME='/usr/lib/jvm/java-8-oracle/'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
-  echo "JAVA_OPTS='-Xmx1000m -Xms1000m'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
-  sed -i "s/Connector protocol=\"HTTP\/1.1\" port=\"8080\"/Connector protocol=\"HTTP\/1.1\" port=\"${2}\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
+  echo "export DHIS2_HOME='${INSTANCE_DIR}/$1/home'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
+  echo "export JAVA_HOME='/usr/lib/jvm/java-8-oracle/'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
+  echo "export JAVA_OPTS='-Xmx1000m -Xms1000m'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
+  sed -i "s/Server port=\"8005\" shutdown=\"SHUTDOWN\"/Server port=\"${SHUTDOWN_PORT}\" shutdown=\"SHUTDOWN\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
+  sed -i "s/Connector protocol=\"HTTP\/1.1\" port=\"8080\"/Connector protocol=\"HTTP\/1.1\" port=\"${PORT}\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
 
   echo "Configuring DHIS 2"
   echo "connection.url = jdbc:postgresql:$1" >> $INSTANCE_DIR/$1/home/dhis.conf
