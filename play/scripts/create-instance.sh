@@ -31,7 +31,9 @@ function create() {
   echo "Renaming instance"
   mv $INSTANCE_DIR/$INSTANCE_FILE $INSTANCE_DIR/$1
 
-  echo "Configuring Tomcat"	
+  echo "Configuring Tomcat"
+  echo "DHIS2_HOME='${INSTANCE_DIR}/$1/home'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
+  echo "JAVA_HOME='/usr/lib/jvm/java-8-oracle/'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
   echo "JAVA_OPTS='-Xmx1000m -Xms1000m'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
   sed -i "s/Connector protocol=\"HTTP\/1.1\" port=\"8080\"/Connector protocol=\"HTTP\/1.1\" port=\"${2}\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
 
