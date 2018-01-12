@@ -44,7 +44,7 @@ function create() {
   echo "Configuring Tomcat"
   echo "export DHIS2_HOME='${INSTANCE_DIR}/$1/home'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
   echo "export JAVA_HOME='/usr/lib/jvm/java-8-oracle/'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
-  echo "export JAVA_OPTS='-Xmx1000m -Xms1000m'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
+  echo "export JAVA_OPTS='-Xmx1500m -Xms1000m'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
   sed -i "s/Server port=\"8005\" shutdown=\"SHUTDOWN\"/Server port=\"${SHUTDOWN_PORT}\" shutdown=\"SHUTDOWN\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
   sed -i "s/Connector protocol=\"HTTP\/1.1\" port=\"8080\"/Connector protocol=\"HTTP\/1.1\" port=\"${PORT}\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
 
