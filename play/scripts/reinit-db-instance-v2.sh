@@ -1,9 +1,9 @@
 #!/bin/bash
 
 TMP_DIR="/ebs1/tmp"
-INSTANCE_BASE_DIR="/ebs1/instances"
 DB_BASE_DIR="/ebs1/databases/sierra-leone"
 DB_FILE="dhis2-db-sierra-leone"
+INSTANCE_BASE_URL="https://play.dhis2.org"
 AUTH="system:System123"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -14,14 +14,9 @@ if [ $# -eq 0 ]; then
 fi
 
 function validate() {
-  if [ ! -d $INSTANCE_BASE_DIR/$1 ]; then
-    echo "Instance $1 does not exist."
-    exit 1
-  fi
-
   if [ ! -d $DB_BASE_DIR/$1 ]; then
     echo "Instance $1 does not have the required SQL file database directory."
-    exit 2
+    exit 1
   fi
 }
 
@@ -39,7 +34,7 @@ function run() {
 }
 
 function analytics() {
-  curl https://play.dhis2.org/$1/api/resourceTables/analytics -X POST -u $AUTH
+  curl ${INSTANCE_BASE_URL}/$1/api/resourceTables/analytics -X POST -u $AUTH
 }
 
 for instance in $@; do
