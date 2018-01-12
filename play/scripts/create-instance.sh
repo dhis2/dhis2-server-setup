@@ -1,5 +1,6 @@
 #!/bin/bash
 
+TMP_DIR="/ebs1/tmp"
 INSTANCE_DIR="/ebs1/instances"
 INSTANCE_FILE="dhis-instance"
 INSTANCE_URL="https://s3-eu-west-1.amazonaws.com/content.dhis2.org/lib/${INSTANCE_FILE}.tar.gz"
@@ -32,10 +33,10 @@ function create() {
   echo "Using HTTP port: ${PORT} and shutdown port: ${SHUTDOWN_PORT}"
 
   echo "Downloading instance from ${INSTANCE_URL}"
-  wget --progress=bar $INSTANCE_URL -O /tmp/${INSTANCE_FILE}.tar.gz
+  wget --progress=bar $INSTANCE_URL -O ${TMP_DIR}/${INSTANCE_FILE}.tar.gz
 
   echo "Extracting instance archive"
-  tar -zxf /tmp/${INSTANCE_FILE}.tar.gz -C $INSTANCE_DIR
+  tar -zxf ${TMP_DIR}/${INSTANCE_FILE}.tar.gz -C $INSTANCE_DIR
 
   echo "Renaming instance"
   mv $INSTANCE_DIR/$INSTANCE_FILE $INSTANCE_DIR/$1
