@@ -14,7 +14,7 @@ To initiate a new instance from the beginning:
 sudo service nginx restart
 ```
 
-* Create Tomcat instance
+* Create Tomcat instance (provide instance version and port number)
 
 ```
 ./create-instance.sh 2.25 8025
