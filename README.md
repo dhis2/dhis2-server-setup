@@ -17,18 +17,54 @@ sudo service nginx restart
 * Create Tomcat instance (provide instance version and port number)
 
 ```
-./create-instance.sh 2.25 8025
+./create-instance.sh 2.28 8028
+```
+
+* View Tomcat log for instance
+
+```
+./log-instance.sh 2.28
 ```
 
 * Download and install DHIS 2 WAR file
 
 ```
-./reinit-instance-v2.sh 2.25
+./reinit-instance.sh 2.28
  ```
  
 * Download, create and install sample PostgreSQL database
 
 ```
-./reinit-db-instance-v2.sh 2.25
+./reinit-db-instance-v2.sh 2.28
  ```
 
+* Restart Tomcat instance
+
+```
+./restart-db-instance-v2.sh 2.28
+ ```
+
+* Start Tomcat instance
+
+```
+./start-db-instance-v2.sh 2.28
+ ```
+
+* Stop Tomcat instance
+
+```
+./stop-db-instance-v2.sh 2.28
+ ```
+ 
+ * Fetch latest sample PostgreSQL database from S3
+ 
+```
+./sync-db-s3.sh
+ ```
+ 
+ * Copy WAR to S3
+ 
+```
+./sync-war-s3.sh 2.28
+ ```
+ 
