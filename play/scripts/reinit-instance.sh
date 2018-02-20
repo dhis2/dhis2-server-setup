@@ -1,7 +1,9 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 if [ $# -eq 0 ]; then
-  echo -e "Usage: $0 <instance> <ci-job>\n"
+  echo -e "Usage: $0 <instances...>\n"
   exit 1
 fi
 
@@ -13,15 +15,18 @@ function validate() {
 }
 
 function cleanWebApps() {
-  rm -rf /ebs1/instances/$1/tomcat/webapps/*
+  sudo rm -rf /ebs1/instances/$1/tomcat/webapps/*
 }
 
 function downloadWar() {
-  wget --progress=bar http://ci.dhis2.org/job/dhis2-$2/lastSuccessfulBuild/artifact/dhis-2/dhis-web/dhis-web-portal/target/dhis.war -O /ebs1/instances/$1/tomcat/webapps/$1.war
+  wget --progress=bar https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/$1/dhis.war -O /ebs1/instances/$1/tomcat/webapps/$1.war
 }
 
-validate $1
-/home/ubuntu/scripts/stop-instance.sh $1
-cleanWebApps $1
-downloadWar $1 $2
-/home/ubuntu/scripts/start-instance.sh $1
+for instance in $@; do
+  validate $instance
+  $DIR/stop-instance.sh $instance
+  cleanWebApps $instance
+  downloadWar $instance
+  $DIR/start-instance.sh $instance
+  sleep 2
+done
