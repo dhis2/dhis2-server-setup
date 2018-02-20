@@ -56,6 +56,12 @@ sudo service nginx restart
 ./stop-db-instance-v2.sh 2.28
  ```
  
+ * Clear nginx cache
+ 
+```
+./clear-nginx-cache.sh
+ ```
+ 
  * Fetch latest sample PostgreSQL database from S3
  
 ```
