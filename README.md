@@ -35,13 +35,13 @@ sudo service nginx restart
 * Download, create and install sample PostgreSQL database
 
 ```
-./reinit-db-instance-v2.sh 2.28
+./reinit-db-instance.sh 2.28
  ```
 
 * Restart Tomcat instance
 
 ```
-./restart-db-instance-v2.sh 2.28
+./restart-db-instance.sh 2.28
  ```
 
 * Start Tomcat instance
