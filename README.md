@@ -61,6 +61,7 @@ sudo service nginx restart
 ```
 ./clear-nginx-cache.sh
  ```
+ ## CI
  
  * Fetch latest sample PostgreSQL database from S3
  
