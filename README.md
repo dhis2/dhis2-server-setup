@@ -41,19 +41,19 @@ sudo service nginx restart
 * Restart Tomcat instance
 
 ```
-./restart-db-instance.sh 2.28
+./restart-instance.sh 2.28
  ```
 
 * Start Tomcat instance
 
 ```
-./start-db-instance-v2.sh 2.28
+./start-instance.sh 2.28
  ```
 
 * Stop Tomcat instance
 
 ```
-./stop-db-instance-v2.sh 2.28
+./stop-instance-v2.sh 2.28
  ```
  
  * Clear nginx cache
