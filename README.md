@@ -53,7 +53,7 @@ sudo service nginx restart
 * Stop Tomcat instance
 
 ```
-./stop-instance-v2.sh 2.28
+./stop-instance.sh 2.28
  ```
  
  * Clear nginx cache
