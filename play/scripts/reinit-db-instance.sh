@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TMP_DIR="/tmp"
+TMP_DIR="/ebs1/tmp"
 DB_BASE_DIR="/ebs1/databases/sierra-leone"
 DB_FILE="dhis2-db-sierra-leone"
 INSTANCE_BASE_URL="https://play.dhis2.org"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-TMP_DIR="/tmp"
+TMP_DIR="/ebs1/tmp"
 INSTANCE_DIR="/ebs1/instances"
 INSTANCE_FILE="dhis-instance"
 INSTANCE_URL="https://s3-eu-west-1.amazonaws.com/content.dhis2.org/lib/${INSTANCE_FILE}.tar.gz"
