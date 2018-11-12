@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Requires that the demo database GitHub repository is cloned locally
-# Requires that a 'dhis' database user which can create database exists.
-# The 'TMP_DIR' and 'DB_BASE_DIR' variables can be adjusted to match local env.
+# Requires that the demo database GitHub repository is cloned locally.
+# Requires that a 'dhis' database user which can create databases exists.
+# The 'TMP_DIR' and 'DB_BASE_DIR' variables can be adjusted to match the local env.
 # Sample usage: $ ./restore-db.sh dev
 
 TMP_DIR="/ebs1/tmp"
