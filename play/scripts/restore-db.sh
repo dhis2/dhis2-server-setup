@@ -10,8 +10,6 @@ DB_BASE_DIR="/ebs1/databases/sierra-leone"
 DB_FILE="dhis2-db-sierra-leone"
 AUTH="system:System123"
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
 if [ $# -eq 0 ]; then
   echo -e "Usage: $0 <instances...>\n"
   exit 1
