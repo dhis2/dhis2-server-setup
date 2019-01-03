@@ -26,8 +26,7 @@ function cleanWebApps() {
 }
 
 function downloadWar() {
-  wget --progress=bar
-  "https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/${1}/dhis.war" -O "${BASE_DIR}/${1}/tomcat/webapps/${1}.war"
+  wget --progress=bar "https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/${1}/dhis.war" -O "${BASE_DIR}/${1}/tomcat/webapps/${1}.war"
 }
 
 for instance in $@; do
