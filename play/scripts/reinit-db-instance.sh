@@ -31,7 +31,7 @@ function run() {
   sudo -u postgres dropdb $1
   sudo -u postgres createdb -O dhis $1
 
-  cp "${DB_BASE_DIR}/${1}/${DB_FILE}.sql.gz "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
+  cp "${DB_BASE_DIR}/${1}/${DB_FILE}.sql.gz" "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
   gunzip -f "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
   sudo -u postgres psql -d "${1}" -f "${TMP_DIR}/${DB_FILE}-${1}.sql"
   sleep 2
