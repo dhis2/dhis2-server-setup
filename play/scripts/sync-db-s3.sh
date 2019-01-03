@@ -1,11 +1,14 @@
 #!/bin/bash
 
-DB_DIR="/ebs1/databases"
+# INIT
+. env.sh
 
-CUR_DIR=$(pwd)
+# GLOBALS
+# ---
+# DB_DIR
 
 # Move to db directory
-cd $DB_DIR
+pushd $DB_DIR
 
 # Pull latest updates
 git pull --ff-only --all
@@ -14,5 +17,4 @@ git pull --ff-only --all
 aws s3 sync . s3://databases.dhis2.org
 
 # Move back to original directory
-cd $CUR_DIR
-
+popd

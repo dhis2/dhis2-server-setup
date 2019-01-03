@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# INIT
+. env.sh
+
+# GLOBALS
+# ---
+# BASE_DIR
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ $# -eq 0 ]; then
@@ -8,18 +15,19 @@ if [ $# -eq 0 ]; then
 fi
 
 function validate() {
-  if [ ! -d /ebs1/instances/$1 ]; then
+  if [ ! -d "${BASE_DIR}/${1}" ]; then
     echo "Instance $1 does not exist."
     exit 1
   fi
 }
 
 function cleanWebApps() {
-  sudo rm -rf /ebs1/instances/$1/tomcat/webapps/*
+  sudo rm -rf "${BASE_DIR}/${1}/tomcat/webapps/*"
 }
 
 function downloadWar() {
-  wget --progress=bar https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/$1/dhis.war -O /ebs1/instances/$1/tomcat/webapps/$1.war
+  wget --progress=bar
+  "https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/${1}/dhis.war" -O "${BASE_DIR}/${1}/tomcat/webapps/${1}.war"
 }
 
 for instance in $@; do
