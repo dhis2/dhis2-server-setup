@@ -6,8 +6,15 @@ INSTANCE_FILE="dhis-instance"
 INSTANCE_URL="https://s3-eu-west-1.amazonaws.com/content.dhis2.org/lib/${INSTANCE_FILE}.tar.gz"
 
 if [ $# -le 1 ]; then
-  echo -e "Usage: $0 <instance> <tomcat-port-number>\n"
+  echo -e "Usage: $0 <instance> <tomcat-port-number> [<dhis2-release-version>]\n"
+  echo -e "       dhis2-release-version may be in the format <version> or <version>/<tag>"
+  echo -e "       e.g. '2.31' or '2.31/2.31.2'\n"
   exit 1
+fi
+
+DHIS2_VERSION=$1
+if [ ! -z "$3" ]; then
+  DHIS2_VERSION=$3
 fi
 
 function validate() {
@@ -40,6 +47,8 @@ function create() {
 
   echo "Renaming instance"
   mv $INSTANCE_DIR/$INSTANCE_FILE $INSTANCE_DIR/$1
+  echo $DHIS2_VERSION > $INSTANCE_DIR/$1/DHIS2_VERSION
+  echo $DHIS2_VERSION > $INSTANCE_DIR/$1/DHIS2_DB_VERSION
 
   echo "Configuring Tomcat"
   echo "export DHIS2_HOME='${INSTANCE_DIR}/$1/home'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh

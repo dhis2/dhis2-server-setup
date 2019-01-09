@@ -1,11 +1,25 @@
 #!/bin/bash
 
+VERSION="DHIS2_VERSION"
+
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 if [ $# -eq 0 ]; then
   echo -e "Usage: $0 <instances...>\n"
+  echo -e "Availalable instances:"
+  ls -1 /ebs1/instances
   exit 1
 fi
+
+function getVersion() {
+  # By default the dhis2 version is the same as the instance name
+  # but that can be overridden with the contents of the DHIS2_VERSION file
+  DHIS2_VERSION=$1
+  if [ -e /ebs1/instances/$1/$VERSION ]; then
+    DHIS2_VERSION=`cat /ebs1/instances/$1/$VERSION`
+  fi
+  set -- "$DHIS2_VERSION"
+}
 
 function validate() {
   if [ ! -d /ebs1/instances/$1 ]; then
@@ -19,7 +33,10 @@ function cleanWebApps() {
 }
 
 function downloadWar() {
-  wget --progress=bar https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/$1/dhis.war -O /ebs1/instances/$1/tomcat/webapps/$1.war
+  DHIS2_VERSION=$1
+  getVersion $DHIS2_VERSION
+  wget --progress=bar https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/$DHIS2_VERSION/dhis.war -O /ebs1/instances/$1/tomcat/webapps/$1.war
+  # cp /home/ubuntu/probe.war /ebs1/instances/$1/tomcat/webapps/probe$1.war
 }
 
 for instance in $@; do
