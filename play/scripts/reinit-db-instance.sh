@@ -18,7 +18,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ $# -eq 0 ]; then
   echo -e "Usage: $0 <instances...>\n"
   echo -e "Availalable instances:"
-  ls -1 /ebs1/instances
+  ls -1 ${BASE_DIR}
   exit 1
 fi
 
@@ -26,13 +26,18 @@ function getVersion() {
   # By default the dhis2 db version is the same as the instance name
   # but that can be overridden with the contents of the DHIS2_DB_VERSION file
   DHIS2_VERSION=$1
-  if [ -e /ebs1/instances/$1/$DBVERSION ]; then
-    DHIS2_VERSION=`cat /ebs1/instances/$1/$DBVERSION`
+  if [ -e ${BASE_DIR}/$1/$DBVERSION ]; then
+    DHIS2_VERSION=`cat ${BASE_DIR}/$1/$DBVERSION`
   fi
   set -- "$DHIS2_VERSION"
 }
 
 function validate() {
+
+  if [ ! -d "${BASE_DIR}/${1}" ]; then
+    echo "Instance $1 does not exist."
+    exit 1
+  fi
   DHIS2_VERSION=$1
   getVersion $DHIS2_VERSION
   if [ ! -d "${DB_BASE_DIR}/${DHIS2_VERSION}" ]; then
@@ -60,7 +65,7 @@ function run() {
   gunzip -f "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
   sudo -u postgres psql -d "${1}" -f "${TMP_DIR}/${DB_FILE}-${1}.sql"
   rm "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
-  
+
   sleep 2
   $DIR/start-instance.sh $1
 }

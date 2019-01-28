@@ -56,7 +56,7 @@ function create() {
   mv "${BASE_DIR}/${INSTANCE_FILE}" "${BASE_DIR}/${1}"
 
   echo $DHIS2_VERSION > ${BASE_DIR}/${1}/DHIS2_VERSION
-  echo $DHIS2_VERSION > "${BASE_DIR}/${1}/DHIS2_DB_VERSION
+  echo $DHIS2_VERSION > ${BASE_DIR}/${1}/DHIS2_DB_VERSION
 
 
   echo "Configuring Tomcat"

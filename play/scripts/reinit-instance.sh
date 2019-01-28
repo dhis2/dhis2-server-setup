@@ -13,7 +13,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ $# -eq 0 ]; then
   echo -e "Usage: $0 <instances...>\n"
   echo -e "Availalable instances:"
-  ls -1 /ebs1/instances
+  ls -1 ${BASE_DIR}
   exit 1
 fi
 
@@ -21,8 +21,8 @@ function getVersion() {
   # By default the dhis2 version is the same as the instance name
   # but that can be overridden with the contents of the DHIS2_VERSION file
   DHIS2_VERSION=$1
-  if [ -e /ebs1/instances/$1/$VERSION ]; then
-    DHIS2_VERSION=`cat /ebs1/instances/$1/$VERSION`
+  if [ -e ${BASE_DIR}/$1/$VERSION ]; then
+    DHIS2_VERSION=`cat ${BASE_DIR}/$1/$VERSION`
   fi
   set -- "$DHIS2_VERSION"
 }
