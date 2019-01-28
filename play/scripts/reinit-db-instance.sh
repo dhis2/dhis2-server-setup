@@ -1,11 +1,17 @@
 #!/bin/bash
 
-TMP_DIR="/tmp"
-DB_BASE_DIR="/ebs1/databases/sierra-leone"
-DB_FILE="dhis2-db-sierra-leone"
-INSTANCE_BASE_URL="https://play.dhis2.org"
-AUTH="system:System123"
+# INIT
+. env.sh
+
+# GLOBALS
+# ---
+# TMP_DIR
+# BASE_URL
+# DB_BASE_DIR
+# DB_FILE
+# AUTH
 DBVERSION="DHIS2_DB_VERSION"
+
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -29,7 +35,7 @@ function getVersion() {
 function validate() {
   DHIS2_VERSION=$1
   getVersion $DHIS2_VERSION
-  if [ ! -d $DB_BASE_DIR/$DHIS2_VERSION ]; then
+  if [ ! -d "${DB_BASE_DIR}/${DHIS2_VERSION}" ]; then
     echo "Instance $1 does not have the required SQL file database directory $DB_BASE_DIR/$DHIS2_VERSION."
     exit 1
   fi
@@ -50,16 +56,17 @@ function run() {
 
   DHIS2_VERSION=$1
   getVersion $DHIS2_VERSION
-  cp $DB_BASE_DIR/$DHIS2_VERSION/$DB_FILE.sql.gz ${TMP_DIR}/$DB_FILE-$1.sql.gz
-  gunzip -f ${TMP_DIR}/$DB_FILE-$1.sql.gz
-  psql -d $1 -U dhis -f ${TMP_DIR}/$DB_FILE-$1.sql
-  rm ${TMP_DIR}/$DB_FILE-$1.sql
+  cp "${DB_BASE_DIR}/${DHIS2_VERSION}/${DB_FILE}.sql.gz" "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
+  gunzip -f "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
+  sudo -u postgres psql -d "${1}" -f "${TMP_DIR}/${DB_FILE}-${1}.sql"
+  rm "${TMP_DIR}/${DB_FILE}-${1}.sql.gz"
+  
   sleep 2
   $DIR/start-instance.sh $1
 }
 
 function analytics() {
-  curl ${INSTANCE_BASE_URL}/$1/api/resourceTables/analytics -X POST -u $AUTH
+  curl "${BASE_URL}/${1}/api/resourceTables/analytics" -X POST -u "${AUTH}"
 }
 
 function baseurl() {

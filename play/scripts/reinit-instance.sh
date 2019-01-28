@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# INIT
+. env.sh
+
+# GLOBALS
+# ---
+# BASE_DIR
 VERSION="DHIS2_VERSION"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -22,20 +28,20 @@ function getVersion() {
 }
 
 function validate() {
-  if [ ! -d /ebs1/instances/$1 ]; then
+  if [ ! -d "${BASE_DIR}/${1}" ]; then
     echo "Instance $1 does not exist."
     exit 1
   fi
 }
 
 function cleanWebApps() {
-  sudo rm -rf /ebs1/instances/$1/tomcat/webapps/*
+  sudo rm -rf "${BASE_DIR}/${1}/tomcat/webapps/*"
 }
 
 function downloadWar() {
   DHIS2_VERSION=$1
   getVersion $DHIS2_VERSION
-  wget --progress=bar https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/$DHIS2_VERSION/dhis.war -O /ebs1/instances/$1/tomcat/webapps/$1.war
+  wget --progress=bar "https://s3-eu-west-1.amazonaws.com/releases.dhis2.org/${DHIS2_VERSION}/dhis.war" -O "${BASE_DIR}/${1}/tomcat/webapps/${1}.war"
   # cp /home/ubuntu/probe.war /ebs1/instances/$1/tomcat/webapps/probe$1.war
 }
 

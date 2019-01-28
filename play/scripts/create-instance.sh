@@ -1,7 +1,14 @@
 #!/bin/bash
 
-TMP_DIR="/ebs1/tmp"
-INSTANCE_DIR="/ebs1/instances"
+# INIT
+. env.sh
+
+# GLOBALS
+# ---
+# TMP_DIR
+# BASE_DIR
+
+
 INSTANCE_FILE="dhis-instance"
 INSTANCE_URL="https://s3-eu-west-1.amazonaws.com/content.dhis2.org/lib/${INSTANCE_FILE}.tar.gz"
 
@@ -18,7 +25,7 @@ if [ ! -z "$3" ]; then
 fi
 
 function validate() {
-  if [ -d $INSTANCE_DIR/$1 ]; then
+  if [ -d "${BASE_DIR}/${1}" ]; then
     echo "Instance $1 already exists."
     exit 1
   fi
@@ -43,24 +50,26 @@ function create() {
   wget --progress=bar $INSTANCE_URL -O ${TMP_DIR}/${INSTANCE_FILE}.tar.gz
 
   echo "Extracting instance archive"
-  tar -zxf ${TMP_DIR}/${INSTANCE_FILE}.tar.gz -C $INSTANCE_DIR
+  tar -zxf "${TMP_DIR}/${INSTANCE_FILE}.tar.gz" -C "$BASE_DIR"
 
   echo "Renaming instance"
-  mv $INSTANCE_DIR/$INSTANCE_FILE $INSTANCE_DIR/$1
-  echo $DHIS2_VERSION > $INSTANCE_DIR/$1/DHIS2_VERSION
-  echo $DHIS2_VERSION > $INSTANCE_DIR/$1/DHIS2_DB_VERSION
+  mv "${BASE_DIR}/${INSTANCE_FILE}" "${BASE_DIR}/${1}"
+
+  echo $DHIS2_VERSION > ${BASE_DIR}/${1}/DHIS2_VERSION
+  echo $DHIS2_VERSION > "${BASE_DIR}/${1}/DHIS2_DB_VERSION
+
 
   echo "Configuring Tomcat"
-  echo "export DHIS2_HOME='${INSTANCE_DIR}/$1/home'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
-  echo "export JAVA_HOME='/usr/lib/jvm/java-8-oracle/'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
-  echo "export JAVA_OPTS='-Xmx1500m -Xms1000m'" >> $INSTANCE_DIR/$1/tomcat/bin/setclasspath.sh
-  sed -i "s/Server port=\"8005\" shutdown=\"SHUTDOWN\"/Server port=\"${SHUTDOWN_PORT}\" shutdown=\"SHUTDOWN\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
-  sed -i "s/Connector protocol=\"HTTP\/1.1\" port=\"8080\"/Connector protocol=\"HTTP\/1.1\" port=\"${PORT}\"/g" $INSTANCE_DIR/$1/tomcat/conf/server.xml
+  echo "export DHIS2_HOME='${BASE_DIR}/${1}/home'" >> "${BASE_DIR}/${1}/tomcat/bin/setclasspath.sh"
+  echo "export JAVA_HOME='/usr/lib/jvm/java-8-oracle/'" >> "${BASE_DIR}/${1}/tomcat/bin/setclasspath.sh"
+  echo "export JAVA_OPTS='-Xmx1500m -Xms1000m'" >> "${BASE_DIR}/${1}/tomcat/bin/setclasspath.sh"
+  sed -i "s/Server port=\"8005\" shutdown=\"SHUTDOWN\"/Server port=\"${SHUTDOWN_PORT}\" shutdown=\"SHUTDOWN\"/g" "${BASE_DIR}/${1}/tomcat/conf/server.xml"
+  sed -i "s/Connector protocol=\"HTTP\/1.1\" port=\"8080\"/Connector protocol=\"HTTP\/1.1\" port=\"${PORT}\"/g" "${BASE_DIR}/${1}/tomcat/conf/server.xml"
 
   echo "Configuring DHIS 2"
-  echo "connection.url = jdbc:postgresql:$1" >> $INSTANCE_DIR/$1/home/dhis.conf
-  echo "connection.username = dhis" >> $INSTANCE_DIR/$1/home/dhis.conf
-  echo "connection.password = dhis" >> $INSTANCE_DIR/$1/home/dhis.conf
+  echo "connection.url = jdbc:postgresql:${1}" >> "${BASE_DIR}/${1}/home/dhis.conf"
+  echo "connection.username = dhis" >> "${BASE_DIR}/${1}/home/dhis.conf"
+  echo "connection.password = dhis" >> "${BASE_DIR}/${1}/home/dhis.conf"
 }
 
 validate $1 $2
