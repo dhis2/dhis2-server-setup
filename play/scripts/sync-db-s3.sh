@@ -14,7 +14,7 @@ pushd $DB_DIR
 git pull --ff-only --all
 
 # Sync with S3
-aws s3 sync . s3://databases.dhis2.org
+aws s3 sync --exclude ".git/*" . s3://databases.dhis2.org
 
 # Move back to original directory
 popd
