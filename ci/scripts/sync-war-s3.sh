@@ -52,7 +52,6 @@ else
     S3_EOS="${S3_BUCKET}/${BRANCH}/dhis2-stable-${BRANCH}-eos.war"
     fi
   done
-  
 fi
 
 echo "====================================="
@@ -65,21 +64,21 @@ echo " EOS          = ${S3_EOS}"
 echo "====================================="
 
 
-#if [[ "${S3_STABLE}" != "" ]]; then
-#  ~/.local/bin/aws s3 cp $WAR_LOCATION $S3_STABLE --metadata "git-commit=$GIT_COMMIT"
-#fi
-#if [[ "${S3_CANARY_DATE}" != "" ]]; then
-#  if [[ $(~/.local/bin/aws s3 ls ${S3_CANARY_DATE} | wc -l) == 0 ]];then
-#    ~/.local/bin/aws s3 cp $WAR_LOCATION $S3_CANARY_DATE --metadata "git-commit=$GIT_COMMIT"
-#    ~/.local/bin/aws s3 cp $WAR_LOCATION $S3_CANARY --metadata "git-commit=$GIT_COMMIT"
-#  fi
-#fi
-#if [[ "${S3_DEV}" != "" ]]; then
-#  ~/.local/bin/aws s3 cp $WAR_LOCATION $S3_DEV --metadata "git-commit=$GIT_COMMIT"
-#fi
-#if [[ "${S3_LEGACY}" != "" ]]; then
-#  ~/.local/bin/aws s3 cp $WAR_LOCATION $S3_LEGACY --metadata "git-commit=$GIT_COMMIT"
-#fi
-#if [[ "${S3_EOS}" != "" ]]; then
-#  ~/.local/bin/aws s3 cp $WAR_LOCATION $S3_EOS --metadata "git-commit=$GIT_COMMIT"
-#fi
+if [[ "${S3_STABLE}" != "" ]]; then
+  aws s3 cp $WAR_LOCATION $S3_STABLE --metadata "git-commit=$GIT_COMMIT"
+fi
+if [[ "${S3_CANARY_DATE}" != "" ]]; then
+  if [[ $(aws s3 ls ${S3_CANARY_DATE} | wc -l) == 0 ]]; then
+    aws s3 cp $WAR_LOCATION $S3_CANARY_DATE --metadata "git-commit=$GIT_COMMIT"
+    aws s3 cp $WAR_LOCATION $S3_CANARY --metadata "git-commit=$GIT_COMMIT"
+  fi
+fi
+if [[ "${S3_DEV}" != "" ]]; then
+  aws s3 cp $WAR_LOCATION $S3_DEV --metadata "git-commit=$GIT_COMMIT"
+fi
+if [[ "${S3_LEGACY}" != "" ]]; then
+  aws s3 cp $WAR_LOCATION $S3_LEGACY --metadata "git-commit=$GIT_COMMIT"
+fi
+if [[ "${S3_EOS}" != "" ]]; then
+  aws s3 cp $WAR_LOCATION $S3_EOS --metadata "git-commit=$GIT_COMMIT"
+fi
