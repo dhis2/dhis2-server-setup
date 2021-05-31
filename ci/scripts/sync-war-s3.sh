@@ -9,7 +9,7 @@ S3_EOS=""
 S3_BUCKET="s3://test-releases.dhis2.org"
 
 
-WAR_LOCATION="${JENKINS_HOME}/builds/${JOB_NAME}/${BUILD_NUMBER}/archive/dhis-2/dhis-web/dhis-web-portal/target/dhis.war"
+WAR_LOCATION="${WORKSPACE}/archive/dhis-2/dhis-web/dhis-web-portal/target/dhis.war"
 
 BRANCH=$1
 PATCH=""
