@@ -6,8 +6,10 @@ S3_CANARY_DATE=""
 S3_DEV=""
 S3_LEGACY=""
 S3_EOS=""
+S3_BUCKET="s3://test-releases.dhis2.org"
 
-WAR_LOCATION="/ebs1/home/jenkins/workspace/${JOB_NAME}/dhis-2/dhis-web/dhis-web-portal/target/dhis.war"
+
+WAR_LOCATION="${JENKINS_HOME}/builds/${JOB_NAME}/${BUILD_NUMBER}/archive/dhis-2/dhis-web/dhis-web-portal/target/dhis.war"
 
 BRANCH=$1
 PATCH=""
@@ -30,24 +32,24 @@ if [[ "$PATCH" != "" ]]
 then
   echo " PATCH        = ${PATCH}"
   # copy to the stable channel
-  S3_STABLE="s3://releases.dhis2.org/${BRANCH}/dhis2-stable-${PATCH}.war"
-  S3_LEGACY="s3://releases.dhis2.org/${BRANCH}/${PATCH}/dhis.war"
+  S3_STABLE="${S3_BUCKET}/${BRANCH}/dhis2-stable-${PATCH}.war"
+  S3_LEGACY="${S3_BUCKET}/${BRANCH}/${PATCH}/dhis.war"
 else
   S3_DATE=`date -I'date'`
-  S3_LEGACY="s3://releases.dhis2.org/${BRANCH}/dhis.war"
+  S3_LEGACY="${S3_BUCKET}/${BRANCH}/dhis.war"
   if [[ "$BRANCH" == "dev" ]]; then
     # use master instead of dev for the new schemas
     BRANCH="master"
   fi
-  S3_CANARY="s3://releases.dhis2.org/${BRANCH}/canary/dhis2-canary-${BRANCH}.war"
-  S3_CANARY_DATE="s3://releases.dhis2.org/${BRANCH}/canary/dhis2-canary-${BRANCH}-${S3_DATE}.war"
-  S3_DEV="s3://releases.dhis2.org/${BRANCH}/dev/dhis2-dev-${BRANCH}.war"
+  S3_CANARY="${S3_BUCKET}/${BRANCH}/canary/dhis2-canary-${BRANCH}.war"
+  S3_CANARY_DATE="${S3_BUCKET}/${BRANCH}/canary/dhis2-canary-${BRANCH}-${S3_DATE}.war"
+  S3_DEV="${S3_BUCKET}/${BRANCH}/dev/dhis2-dev-${BRANCH}.war"
 
   for V in "2.31" "2.32"
   do	
     if [[ "$BRANCH" == "$V" ]]; then
     # create the "eos" copy
-    S3_EOS="s3://releases.dhis2.org/${BRANCH}/dhis2-stable-${BRANCH}-eos.war"
+    S3_EOS="${S3_BUCKET}/${BRANCH}/dhis2-stable-${BRANCH}-eos.war"
     fi
   done
   
