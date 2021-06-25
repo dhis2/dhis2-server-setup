@@ -36,7 +36,11 @@ then
   S3_LEGACY="${S3_BUCKET}/${BRANCH}/${PATCH}/dhis.war"
 else
   S3_DATE=`date -I'date'`
-  S3_LEGACY="${S3_BUCKET}/${BRANCH}/dhis.war"
+  if [[ "$BRANCH" == "master" ]]; then
+    S3_LEGACY="${S3_BUCKET}/dev/dhis.war"
+  else
+    S3_LEGACY="${S3_BUCKET}/${BRANCH}/dhis.war"
+  fi
   S3_CANARY="${S3_BUCKET}/${BRANCH}/canary/dhis2-canary-${BRANCH}.war"
   S3_CANARY_DATE="${S3_BUCKET}/${BRANCH}/canary/dhis2-canary-${BRANCH}-${S3_DATE}.war"
   S3_DEV="${S3_BUCKET}/${BRANCH}/dev/dhis2-dev-${BRANCH}.war"
@@ -44,8 +48,8 @@ else
   for V in "2.31" "2.32"
   do	
     if [[ "$BRANCH" == "$V" ]]; then
-    # create the "eos" copy
-    S3_EOS="${S3_BUCKET}/${BRANCH}/dhis2-stable-${BRANCH}-eos.war"
+      # create the "eos" copy
+      S3_EOS="${S3_BUCKET}/${BRANCH}/dhis2-stable-${BRANCH}-eos.war"
     fi
   done
 fi
