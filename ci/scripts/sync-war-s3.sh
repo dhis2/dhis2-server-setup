@@ -37,10 +37,6 @@ then
 else
   S3_DATE=`date -I'date'`
   S3_LEGACY="${S3_BUCKET}/${BRANCH}/dhis.war"
-  if [[ "$BRANCH" == "dev" ]]; then
-    # use master instead of dev for the new schemas
-    BRANCH="master"
-  fi
   S3_CANARY="${S3_BUCKET}/${BRANCH}/canary/dhis2-canary-${BRANCH}.war"
   S3_CANARY_DATE="${S3_BUCKET}/${BRANCH}/canary/dhis2-canary-${BRANCH}-${S3_DATE}.war"
   S3_DEV="${S3_BUCKET}/${BRANCH}/dev/dhis2-dev-${BRANCH}.war"
