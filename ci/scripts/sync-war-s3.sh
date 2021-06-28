@@ -6,7 +6,7 @@ S3_CANARY_DATE=""
 S3_DEV=""
 S3_LEGACY=""
 S3_EOS=""
-S3_BUCKET="s3://releases.dhis2.org"
+S3_BUCKET="s3://test-releases.dhis2.org"
 
 
 WAR_LOCATION="${WORKSPACE}/dhis-2/dhis-web/dhis-web-portal/target/dhis.war"
