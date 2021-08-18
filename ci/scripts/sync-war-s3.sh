@@ -45,7 +45,7 @@ else
   S3_CANARY_DATE="${S3_BUCKET}/${BRANCH}/canary/dhis2-canary-${BRANCH}-${S3_DATE}.war"
   S3_DEV="${S3_BUCKET}/${BRANCH}/dev/dhis2-dev-${BRANCH}.war"
 
-  for V in "2.31" "2.32"
+  for V in "2.31" "2.32" "2.33"
   do	
     if [[ "$BRANCH" == "$V" ]]; then
       # create the "eos" copy
