@@ -4,7 +4,9 @@ set -euo pipefail
 
 BUILD_DATE=$(date -I'date')
 
-BUCKET="s3://releases.dhis2.org"
+VERSIONS_JSON="https://releases.dhis2.org/versions.json"
+
+BUCKET="s3://test-releases.dhis2.org"
 
 S3_CMD="aws s3 cp --metadata git-commit=$GIT_COMMIT --no-progress"
 
@@ -32,11 +34,13 @@ fi
 case $RELEASE_TYPE in
   "canary")
     DESTINATION="$BUCKET/$RELEASE_VERSION/$RELEASE_TYPE/dhis2-$RELEASE_TYPE-$RELEASE_VERSION.war"
+
     ADDITIONAL_DESTINATION="$BUCKET/$RELEASE_VERSION/$RELEASE_TYPE/dhis2-$RELEASE_TYPE-$RELEASE_VERSION-$BUILD_DATE.war"
     ;;
 
   "dev")
     DESTINATION="$BUCKET/$RELEASE_VERSION/$RELEASE_TYPE/dhis2-$RELEASE_TYPE-$RELEASE_VERSION.war"
+
     LEGACY_DESTINATION="$BUCKET/$RELEASE_VERSION/dhis.war"
     ;;
 
@@ -46,9 +50,21 @@ case $RELEASE_TYPE in
 
   "stable")
     SHORT_VERSION=$(cut -d '.' -f 1,2 <<< "$RELEASE_VERSION")
+
+    PATCH_VERSION=$(cut -d '.' -f 3 <<< "$RELEASE_VERSION")
+
     DESTINATION="$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-$RELEASE_VERSION.war"
-    ADDITIONAL_DESTINATION="$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-latest.war"
+
     LEGACY_DESTINATION="$BUCKET/$SHORT_VERSION/$RELEASE_VERSION/dhis.war"
+
+    LATEST_PATCH_VERSION=$(
+      curl -fsSL "$VERSIONS_JSON" |
+      jq -r --arg VERSION "$SHORT_VERSION" '.versions[] | select(.name == $VERSION ) | .latestPatchVersion'
+    )
+
+    if [[ -n "${LATEST_PATCH_VERSION-}" && "$PATCH_VERSION" -ge "$LATEST_PATCH_VERSION" ]]; then
+      ADDITIONAL_DESTINATION="$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-latest.war"
+    fi
     ;;
 
   *)
