@@ -41,7 +41,11 @@ case $RELEASE_TYPE in
   "dev")
     DESTINATION="$BUCKET/$RELEASE_VERSION/$RELEASE_TYPE/dhis2-$RELEASE_TYPE-$RELEASE_VERSION.war"
 
-    LEGACY_DESTINATION="$BUCKET/$RELEASE_TYPE/dhis.war"
+    if [[ "$RELEASE_VERSION" == "master" ]]; then
+      RELEASE_VERSION="dev"
+    fi
+
+    LEGACY_DESTINATION="$BUCKET/$RELEASE_VERSION/dhis.war"
     ;;
 
   "eos")
