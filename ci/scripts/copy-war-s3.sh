@@ -64,7 +64,7 @@ case $RELEASE_TYPE in
 
     PATCH_VERSION=$(cut -d '.' -f 3 <<< "$RELEASE_VERSION")
 
-    if ((IS_PATCH_VERSION)); then
+    if [[ "$IS_PATCH_VERSION" -eq 1 ]]; then
       RELEASE_VERSION+="-rc"
     fi
 
@@ -77,7 +77,7 @@ case $RELEASE_TYPE in
       jq -r --arg VERSION "$SHORT_VERSION" '.versions[] | select(.name == $VERSION ) | .latestPatchVersion'
     )
 
-    if [[ -n "${LATEST_PATCH_VERSION-}" && "$PATCH_VERSION" -ge "$LATEST_PATCH_VERSION" ]]; then
+    if [[ "$IS_PATCH_VERSION" -eq 0 && -n "${LATEST_PATCH_VERSION-}" && "$PATCH_VERSION" -ge "$LATEST_PATCH_VERSION" ]]; then
       ADDITIONAL_DESTINATION="$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-latest.war"
     fi
     ;;
