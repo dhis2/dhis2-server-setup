@@ -8,7 +8,7 @@ IS_PATCH_VERSION=0
 
 VERSIONS_JSON="https://releases.dhis2.org/versions.json"
 
-BUCKET="s3://test-releases.dhis2.org"
+BUCKET="s3://releases.dhis2.org"
 
 S3_CMD="aws s3 cp --metadata git-commit=$GIT_COMMIT --no-progress"
 
