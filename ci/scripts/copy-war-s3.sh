@@ -4,6 +4,8 @@ set -euo pipefail
 
 BUILD_DATE=$(date -I'date')
 
+IS_PATCH_VERSION=0
+
 VERSIONS_JSON="https://releases.dhis2.org/versions.json"
 
 BUCKET="s3://releases.dhis2.org"
@@ -53,9 +55,18 @@ case $RELEASE_TYPE in
     ;;
 
   "stable")
+    if [[ "$RELEASE_VERSION" =~ ^patch\/.*  ]]; then
+      IS_PATCH_VERSION=1
+      RELEASE_VERSION=${RELEASE_VERSION#"patch/"}
+    fi
+
     SHORT_VERSION=$(cut -d '.' -f 1,2 <<< "$RELEASE_VERSION")
 
     PATCH_VERSION=$(cut -d '.' -f 3 <<< "$RELEASE_VERSION")
+
+    if [[ "$IS_PATCH_VERSION" -eq 1 ]]; then
+      RELEASE_VERSION+="-rc"
+    fi
 
     DESTINATION="$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-$RELEASE_VERSION.war"
 
@@ -66,7 +77,7 @@ case $RELEASE_TYPE in
       jq -r --arg VERSION "$SHORT_VERSION" '.versions[] | select(.name == $VERSION ) | .latestPatchVersion'
     )
 
-    if [[ -n "${LATEST_PATCH_VERSION-}" && "$PATCH_VERSION" -ge "$LATEST_PATCH_VERSION" ]]; then
+    if [[ "$IS_PATCH_VERSION" -eq 0 && -n "${LATEST_PATCH_VERSION-}" && "$PATCH_VERSION" -ge "$LATEST_PATCH_VERSION" ]]; then
       ADDITIONAL_DESTINATION="$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-latest.war"
     fi
     ;;
