@@ -6,7 +6,7 @@ BUILD_DATE=$(date -I'date')
 
 IS_PATCH_VERSION=0
 
-VERSIONS_JSON="https://releases.dhis2.org/versions.json"
+VERSIONS_JSON="https://releases.dhis2.org/v1/versions/stable.json"
 
 BUCKET="s3://releases.dhis2.org"
 
