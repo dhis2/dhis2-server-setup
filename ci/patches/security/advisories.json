@@ -37,7 +37,7 @@
       {
         "cveID": "CVE-2022-24848",
         "privateForkUrl": "https://github.com/dhis2/dhis2-core-ghsa-52vp-f7hj-cj92",
-        "status": "APPLIED",
+        "status": "FIXED",
         "pullRequests": [
           {
             "prNumber": 1,
