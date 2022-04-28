@@ -33,6 +33,17 @@
             "target": "patch/2.36.4"
           }
         ]
+      },
+      {
+        "cveID": "CVE-2022-24848",
+        "privateForkUrl": "https://github.com/dhis2/dhis2-core-ghsa-52vp-f7hj-cj92",
+        "status": "APPLIED",
+        "pullRequests": [
+          {
+            "prNumber": 1,
+            "target": "patch/2.38.0"
+          }
+        ]
       }
     ]
 }
