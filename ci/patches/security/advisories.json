@@ -42,6 +42,14 @@
           {
             "prNumber": 1,
             "target": "patch/2.38.0"
+          },
+          {
+            "prNumber": 2,
+            "target": "patch/2.37.6.1"
+          },
+          {
+            "prNumber": 3,
+            "target": "patch/2.36.10.1"
           }
         ]
       }
