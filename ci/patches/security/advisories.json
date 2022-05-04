@@ -16,7 +16,7 @@
         ]
       },
       {
-        "cveID": "CVE-2021-XXXXX",
+        "cveID": "CVE-2021-41187",
         "privateForkUrl": "https://github.com/dhis2/dhis2-core-ghsa-fvm5-gp3j-c7c6",
         "status": "APPLIED",
         "pullRequests": [
