@@ -54,6 +54,10 @@
           {
             "prNumber": 4,
             "target": "2.36_ks"
+          }  ,
+          {
+            "prNumber": 5,
+            "target": "patch/2.36.11"
           }            
         ]
       }
