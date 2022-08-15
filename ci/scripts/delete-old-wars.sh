@@ -28,14 +28,16 @@ last_supported_date=$(
     '.versions[] | select(.name == $version) | .patchVersions[] | select(.version == ($patch|tonumber)) | .releaseDate'
 )
 
-aws s3api list-object-versions --bucket "$bucket" --prefix "$prefix" --max-items=3 --query 'Versions[?LastModified < `'$last_supported_date'`]' | jq '{Objects: [ .[] | {Key: .Key, VersionId: .VersionId} ] }' > old-wars.json
+if [[ "$version" == "master" ]]; then
+  last_supported_date=$(date -d "-1 week" +%Y-%m-%d)
+fi
 
 aws s3api list-object-versions \
   --bucket "$bucket" \
   --prefix "$prefix" \
   --max-items=3 \
-  --query 'Versions[?LastModified < `'$last_supported_date'`]' |
-  jq '{Objects: [ .[] | {Key: .Key, VersionId: .VersionId} ] }' > old-wars.json
+  --query "Versions[?LastModified < \`$last_supported_date\`]" |
+jq '{Objects: [.[] | {Key: .Key, VersionId: .VersionId}]}' > old-wars.json
 
 aws s3api delete-objects \
   --bucket "$bucket" \
