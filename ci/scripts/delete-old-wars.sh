@@ -29,7 +29,7 @@ last_supported_date=$(
 )
 
 if [[ "$version" == "master" ]]; then
-  last_supported_date=$(date -d "-1 week" +%Y-%m-%d)
+  last_supported_date=$(date -d "-1 month" +%Y-%m-%d)
 fi
 
 aws s3api list-object-versions \
