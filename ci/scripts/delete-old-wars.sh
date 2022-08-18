@@ -38,6 +38,13 @@ aws s3api list-object-versions \
   --query "Versions[?LastModified < \`$last_supported_date\`]" |
 jq '{Objects: [.[] | {Key: .Key, VersionId: .VersionId}]}' > old-wars.json
 
-aws s3api delete-objects \
-  --bucket "$bucket" \
-  --delete file://old-wars.json
+number_of_objects=$(jq -r '.Objects | length' old-wars.json)
+
+if [[ "$number_of_objects" -gt 0 ]]; then
+  echo "Deleting $number_of_objects objects ..."
+  aws s3api delete-objects \
+    --bucket "$bucket" \
+    --delete file://old-wars.json
+else
+  echo "Nothing to delete."
+fi
