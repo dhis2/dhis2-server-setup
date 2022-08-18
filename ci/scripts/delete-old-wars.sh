@@ -35,7 +35,6 @@ fi
 aws s3api list-object-versions \
   --bucket "$bucket" \
   --prefix "$prefix" \
-  --max-items=3 \
   --query "Versions[?LastModified < \`$last_supported_date\`]" |
 jq '{Objects: [.[] | {Key: .Key, VersionId: .VersionId}]}' > old-wars.json
 
