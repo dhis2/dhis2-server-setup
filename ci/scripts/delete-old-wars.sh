@@ -25,7 +25,7 @@ last_supported_date=$(
   curl -fsSL "$versions_json" |
   jq -r --arg version "$version" \
     --arg patch "$last_supported_patch" \
-    '.versions[] | select(.name == $version) | .patchVersions[] | select(.version == ($patch|tonumber)) | .releaseDate'
+    'last(.versions[] | select(.name == $version) | .patchVersions[] | select(.version == ($patch|tonumber)) | .releaseDate)'
 )
 
 if [[ "$version" == "master" ]]; then
