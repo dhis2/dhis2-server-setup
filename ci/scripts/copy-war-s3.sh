@@ -66,12 +66,19 @@ case $RELEASE_TYPE in
 
     PATCH_VERSION=$(cut -d '.' -f 3 <<< "$RELEASE_VERSION")
 
+    # Add an extra destination in S3 for the new semantic version schema without leading "2."
+    IFS=. read -ra RELEASE_VERSION_SEGMENTS <<< "$RELEASE_VERSION"
+
+    NEW_RELEASE_VERSION=$(cut -d '.' -f 2- <<< "$RELEASE_VERSION")
+    NEW_SHORT_VERSION=$(cut -d '.' -f 2 <<< "$RELEASE_VERSION")
+
     if [[ "$IS_PATCH_VERSION" -eq 1 ]]; then
       RELEASE_VERSION+="-rc"
+      # for release candidates, also add a version with the git hash
+      S3_DESTINATIONS+=("$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-$RELEASE_VERSION-${GIT_COMMIT:0:7}.war")
     fi
 
     S3_DESTINATIONS+=("$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-$RELEASE_VERSION.war")
-
     S3_DESTINATIONS+=("$BUCKET/$SHORT_VERSION/$RELEASE_VERSION/dhis.war")
 
     LATEST_PATCH_VERSION=$(
@@ -83,17 +90,19 @@ case $RELEASE_TYPE in
       S3_DESTINATIONS+=("$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-latest.war")
     fi
 
-    # Add an extra destination in S3 for the new semantic version schema without leading "2."
-    IFS=. read -ra RELEASE_VERSION_SEGMENTS <<< "$RELEASE_VERSION"
-
-    NEW_RELEASE_VERSION=$(cut -d '.' -f 2- <<< "$RELEASE_VERSION")
-    NEW_SHORT_VERSION=$(cut -d '.' -f 2 <<< "$RELEASE_VERSION")
 
     if [[ ${#RELEASE_VERSION_SEGMENTS[@]} -lt 4 ]]; then
       NEW_RELEASE_VERSION+=".0"
     fi
 
+    if [[ "$IS_PATCH_VERSION" -eq 1 ]]; then
+      NEW_RELEASE_VERSION+="-rc"
+      # for release candidates, also add a version with the git hash
+      S3_DESTINATIONS+=("$BUCKET/$NEW_SHORT_VERSION/dhis2-$RELEASE_TYPE-$NEW_RELEASE_VERSION-${GIT_COMMIT:0:7}.war")
+    fi
+
     S3_DESTINATIONS+=("$BUCKET/$NEW_SHORT_VERSION/dhis2-$RELEASE_TYPE-$NEW_RELEASE_VERSION.war")
+
     ;;
 
   *)
@@ -104,5 +113,6 @@ esac
 
 for destination in "${S3_DESTINATIONS[@]}"
 do
+  #echo "$WAR_LOCATION" "$destination"
   $S3_CMD "$WAR_LOCATION" "$destination"
 done
