@@ -44,7 +44,8 @@ if [[ "$number_of_objects" -gt 0 ]]; then
   echo "Deleting $number_of_objects objects ..."
   aws s3api delete-objects \
     --bucket "$bucket" \
-    --delete file://old-wars.json
+    --delete file://old-wars.json |
+  jq -e 'has("Errors") | not' # exit with non-zero code when there are "Errors" in the response
 else
   echo "Nothing to delete."
 fi
