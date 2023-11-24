@@ -88,6 +88,7 @@ case $RELEASE_TYPE in
 
     if [[ "$IS_PATCH_VERSION" -eq 0 && -n "${LATEST_PATCH_VERSION-}" && "$PATCH_VERSION" -ge "$LATEST_PATCH_VERSION" ]]; then
       S3_DESTINATIONS+=("$BUCKET/$SHORT_VERSION/dhis2-$RELEASE_TYPE-latest.war")
+      S3_DESTINATIONS+=("$BUCKET/$NEW_SHORT_VERSION/dhis2-$RELEASE_TYPE-latest.war")
     fi
 
 
